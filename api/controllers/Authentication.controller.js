@@ -13,7 +13,7 @@ const User =  require("../models/user");
 
         //check if user already exists
         const userExist = await User.findOne({email : email});
-        if(userExist) return res.status(400).send({sucess : "false", mesg:"User already registered"});
+        if(userExist) return res.status(400).send({success : "false", mesg:"User already registered"});
 
         //Hashing password
         const salt = await bcrypt.genSalt(10);
@@ -37,7 +37,7 @@ const User =  require("../models/user");
         };
         const accessToken = jwt.sign(payload, secret, {expiresIn: '120m'});
         
-        res.status(200).send({sucess : "true","auth-token" : accessToken});
+        res.status(200).send({success : "true","token" : accessToken});
     
     }catch(err){
         if(err){
@@ -53,11 +53,11 @@ const User =  require("../models/user");
         const {email, password} = req.body;
         //check if user  exists
         const user = await User.findOne({email : email});
-        if(user == null) return res.status(400).send({sucess : "false",mesg:"Invalid user name/password"});
+        if(user == null) return res.status(400).send({success : "false",mesg:"Invalid user name/password"});
 
         //password check
         const validPass = await bcrypt.compare(password, user.password);
-        if(!validPass) return res.status(400).send({sucess : "false",mesg:"Invalid user name/password"});
+        if(!validPass) return res.status(400).send({success : "false",mesg:"Invalid user name/password"});
 
         //create and assign token with role_id
         const payload = {
@@ -68,7 +68,7 @@ const User =  require("../models/user");
         };
         const accessToken = jwt.sign(payload, secret, {expiresIn: '120m'});
         
-        res.status(200).json({sucess : "true","auth-token" : accessToken});
+        res.status(200).json({success : "true","token" : accessToken});
 
     }catch(err){
         console.log(err);
