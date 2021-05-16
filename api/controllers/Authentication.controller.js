@@ -10,6 +10,9 @@ const User =  require("../models/user");
  async function register (req,res) {
      try{
         const {name,email, password} = req.body;
+        if(!name || !email || !password){
+            return res.status(400).send({success : "false",mesg:"fields are empty"});
+        }
 
         //check if user already exists
         const userExist = await User.findOne({email : email});
@@ -51,11 +54,15 @@ const User =  require("../models/user");
  async function login (req, res){
     try{
         const {email, password} = req.body;
+        if(!email || !password){
+            return res.status(400).send({success : "false",mesg:"fields are empty"});
+        }
         //check if user  exists
         const user = await User.findOne({email : email});
         if(user == null) return res.status(400).send({success : "false",mesg:"Invalid user name/password"});
 
         //password check
+
         const validPass = await bcrypt.compare(password, user.password);
         if(!validPass) return res.status(400).send({success : "false",mesg:"Invalid user name/password"});
 
