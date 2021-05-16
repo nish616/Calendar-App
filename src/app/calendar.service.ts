@@ -18,7 +18,10 @@ export class CalendarService {
   }
 
   delete(data : any){
-    
-    return this.http.delete<any>(this._calendarEventsUrl+"?title="+data.title+"&start="+data.start);
+    return this.http.delete<any>(this._calendarEventsUrl+"/"+data.id,data);
+  }
+
+  save(data : any){
+    return this.http.put<any>(this._calendarEventsUrl+"/"+data.id,data);
   }
 }

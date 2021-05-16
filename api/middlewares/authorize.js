@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const {secret} = require("../Config/jwt.token");
 
 function authorize(req, res, next){
-    const authHeader = req.headers['auth-token'];
+    const authHeader = req.headers['authorization'];
     if(authHeader == null) return res.status(401).send("Acess denied!");
 
     const acessToken = authHeader.split(' ')[1];
@@ -12,7 +12,10 @@ function authorize(req, res, next){
 
     jwt.verify(acessToken, secret, (err, user) => {
         if(err) return res.sendStatus(403);
-        console.log(user);
+                
+        res.locals.id = user.id;
+        res.locals.name = user.name;
+        res.locals.email = user.email;
         
         next();
     });

@@ -11,3 +11,54 @@ h3 {
       margin: auto;
       max-width: 80%;
   }
+
+  .container-fluid.logout-btn {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px auto;
+  }
+
+  .container-fluid.logout-btn > .btn {
+    background: linear-gradient(to right, #FF4B2B, #FF416C);
+    outline: none;
+    color: #ffffff;
+    border: 0;
+  }
+
+  .btn.btn-primary {
+    background: linear-gradient(to right, #FF4B2B, #FF416C);
+    border: 0;
+  }
+
+  .btn.btn-outline-secondary {
+    border: 1px solid#FF416C;
+  }
+
+  .btn.btn-primary.active {
+    background: #ffffff !important;
+    color: #020202 !important;
+    border: 1px solid #ff4457;
+}
+
+.calendar-container {
+  box-shadow: 2px 2px 6px 0px #ff435c;
+  padding: 16px;
+  border-radius: 4px;
+  margin: 40px auto;
+}
+
+.calendar-container{
+  box-shadow: 2px 2px 6px 0px #dad3d3;
+  padding: 16px;
+  border-radius: 4px;
+  margin: 40px auto;
+}
+
+.btn.btn-primary.success-btn {
+  background: #0c7025;
+  margin-right: 4px;;
+}
+
+.btn.btn-primary.danger-btn {
+  background: #d80000;
+}

@@ -63,8 +63,7 @@ const User =  require("../models/user");
         const payload = {
             id : user._id,
             name : user.name,
-            email : user.email,
-            password : user.password
+            email : user.email
         };
         const accessToken = jwt.sign(payload, secret, {expiresIn: '120m'});
         

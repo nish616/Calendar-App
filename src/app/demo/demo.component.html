@@ -1,3 +1,8 @@
+<div class="container-fluid logout-btn">
+    <button class="btn btn-warning" (click)="logout()">
+        Logout
+    </button>
+</div>
 <div class="calendar-container">
   <div class="row text-center">
     <div class="col-md-4">
@@ -49,8 +54,8 @@
 
 
 <!-- Everything you see below is just for the demo, you don't need to include it in your app -->
-
-<br /><br /><br />
+</div>
+<div class="calendar-container">
 
 <h3>
     Edit events
@@ -65,11 +70,11 @@
       <thead>
         <tr>
           <th>Title</th>
-          <th>Primary color</th>
-          <th>Secondary color</th>
+          <th>#1 Color</th>
+          <th>#2 Color</th>
           <th>Starts at</th>
           <th>Ends at</th>
-          <th>Remove</th>
+          <th style="width: 160px;">Remove</th>
         </tr>
       </thead>
   
@@ -128,10 +133,10 @@
             />
           </td>
           <td>
-            <!-- <button class="btn btn-primary" (click)="saveEvent(event)">
-                save
-            </button> -->
-            <button class="btn btn-danger" (click)="deleteEvent(event)">
+            <button class="btn btn-primary success-btn" (click)="saveEvent(event)">
+                Save
+            </button>
+            <button class="btn btn-primary danger-btn" (click)="deleteEvent(event)">
               Delete
             </button>
           </td>

@@ -23,6 +23,10 @@ import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, Cal
 
 import { CalendarService } from "../calendar.service";
 
+import { Router } from "@angular/router";
+import { HttpErrorResponse } from '@angular/common/http';
+import { trackByHourSegment } from 'angular-calendar/modules/common/util';
+
 const colors: any = {
   red: {
     primary: '#ad2121',
@@ -45,7 +49,7 @@ const colors: any = {
   templateUrl: './demo.component.html',
 })
 export class DemoComponent implements OnInit {
-  @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+  //@ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   view: CalendarView = CalendarView.Month;
 
@@ -58,101 +62,53 @@ export class DemoComponent implements OnInit {
     event: CalendarEvent;
   };
 
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
-      },
-    },
-    {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
-      a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
-      },
-    },
-  ];
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = [
-    // {
-    //   start: subDays(startOfDay(new Date()), 1),
-    //   end: addDays(new Date(), 1),
-    //   title: 'A 3 day event',
-    //   color: colors.red,
-    //   actions: this.actions,
-    //   allDay: true,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-    // {
-    //   start: startOfDay(new Date()),
-    //   title: 'An event with no end date',
-    //   color: colors.yellow,
-    //   actions: this.actions,
-    // },
-    // {
-    //   start: subDays(endOfMonth(new Date()), 3),
-    //   end: addDays(endOfMonth(new Date()), 3),
-    //   title: 'A long event that spans 2 months',
-    //   color: colors.blue,
-    //   allDay: true,
-    // },
-    // {
-    //   start: addHours(startOfDay(new Date()), 2),
-    //   end: addHours(new Date(), 2),
-    //   title: 'A draggable and resizable event',
-    //   color: colors.yellow,
-    //   actions: this.actions,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-  ];
+  events: CalendarEvent[] = [];
 
-  activeDayIsOpen: boolean = true;
+  activeDayIsOpen: boolean;
 
-  constructor(private modal: NgbModal, private _calender : CalendarService) {
+  constructor(private modal: NgbModal, private router : Router, private _calender : CalendarService) {
    
   }
 
   ngOnInit():void{
-    this.activeDayIsOpen = false;
+    //this.activeDayIsOpen = false;
+   this.getEvents();
+    
+  }
+  
+  getEvents(){
     this._calender.get()
     .subscribe(
       (response) => {
         console.log(response);
         response.result = response.result.map((event) => {
           return {
+            id : event._id,
             title : event.title,
             start : parseJSON(event.start),
             end : parseJSON(event.end),
             color : event.color
           };
         })
-
         this.events = [
-          ...this.events,
           ...response.result
-        ]
+        ];
+       this.refresh.next();
       },
       (error) => {
        console.log(error);
-       alert(error.error.mesg);
+       if(error instanceof HttpErrorResponse){
+         if (error.status == 401 || error.status == 403){
+            localStorage.removeItem('auth-token');
+            this.router.navigate(['/login']);
+         }
+       }
       }
      )
-
   }
-  
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -183,10 +139,11 @@ export class DemoComponent implements OnInit {
     });
     this.handleEvent('Dropped or resized', event);
   }
+  
 
   handleEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
+    //this.modal.open(this.modalContent, { size: 'lg' });
   }
 
   newDefaultEvent : CalendarEvent = {
@@ -197,25 +154,39 @@ export class DemoComponent implements OnInit {
   }
 
   addEvent(): void {
-    // this._calender.add(this.newDefaultEvent)
-    // .subscribe(
-    //   (response) => {
-    //    console.log(response);
-    //   },
-    //   (error) => {
-    //    console.log(error);
-    //    alert(error.error.mesg);
-    //   }
-    //  )
-    this.events = [
-      ...this.events,
-      this.newDefaultEvent,
+    this._calender.add(this.newDefaultEvent)
+    .subscribe(
+      (response) => {
+       console.log(response);
+       this.getEvents();
+       //location.reload();
+      },
+      (error) => {
+       console.log(error);
+       alert(error.error.mesg);
+      }
+     )
+    
+    // this.events = [
+    //   ...this.events,
+    //   this.newDefaultEvent,
 
-    ];
+    // ];
   }
 
   saveEvent(eventToSave : CalendarEvent){
-
+    this._calender.save(eventToSave)
+    .subscribe(
+      (response) => {
+       console.log(response);
+       ///location.reload();
+       this.getEvents();
+      },
+      (error) => {
+       console.log(error);
+       alert(error.error.mesg);
+      }
+     )
   }
   deleteEvent(eventToDelete: CalendarEvent) {
     //this.events = this.events.filter((event) => event !== eventToDelete);
@@ -224,6 +195,8 @@ export class DemoComponent implements OnInit {
      .subscribe(
       (response) => {
        console.log(response);
+       //location.reload();
+       this.getEvents();
       },
       (error) => {
        console.log(error);
@@ -238,5 +211,10 @@ export class DemoComponent implements OnInit {
 
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
+  }
+
+  logout(){
+    localStorage.removeItem('auth-token');
+    this.router.navigate(['/login']);
   }
 }

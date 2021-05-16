@@ -5,10 +5,10 @@ const authorize = require("../Middlewares/authorize");
 
 const Event  = require("../Controllers/Event.controller");
 
-router.get("/events",  Event.getEvents);
-router.post("/events", Event.createEvent );
-//router.put("/events", Event.editEvent  );
-router.delete("/events", Event.deleteEvent  );
+router.get("/events", authorize, Event.getEvents);
+router.post("/events", authorize, Event.createEvent );
+router.put("/events/:id", authorize, Event.editEvent  );
+router.delete("/events/:id", authorize, Event.deleteEvent  );
 
 
 

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+var morgan = require('morgan')
 require("dotenv").config();
 
 //require Db connection
@@ -12,6 +13,7 @@ const eventsRoute = require("./routes/Events.router");
 const app = express();
 
 //express middleware
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));

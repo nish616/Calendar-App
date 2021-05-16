@@ -8,7 +8,8 @@
             placeholder="Name"
             id="name"
             name="name"
-            [(ngModel)] = "name" 
+            [(ngModel)] = "name"
+            required 
             />
 			
             <input type="email" 
@@ -16,6 +17,7 @@
             id="email"
             name="email" 
             [(ngModel)] = "email"
+            required
             />
 			
             <input type="password" 
@@ -23,6 +25,7 @@
             id="password" 
             name="password"
             [(ngModel)] = "password"
+            required
             />
 			
             <button>Sign Up</button>
@@ -36,12 +39,14 @@
             placeholder="Email" 
             name="email"
             [(ngModel)] = "email"
+            required
             />
 			
             <input type="password" 
             placeholder="Password" 
             name="password"
             [(ngModel)] = "password"
+            required
             />
 
 			<button>Sign In</button>
@@ -62,35 +67,4 @@
 	</div>
 </div>
 
-
-
-
-
-
-<!-- <div class="container">
-    <div class="form-container sign-in-container">
-        <form #loginForm="ngForm">
-            <h1>Sign in</h1>
-            <label for="username">Username</label>
-            <input type="text" 
-            placeholder="Username"
-            id="username" 
-            name = "username"
-            [(ngModel)] = "username"
-            />
-            <label for="password">Password</label>
-            <input type="password" 
-            placeholder="Password"
-            id="password"
-            name = "password"
-            [(ngModel)] = "password"
-            />
-            
-            <button
-            (click)="onSubmit(loginForm.value)"
-            >Sign In</button>
-        </form>
-        
-    </div>
-</div> -->
 
